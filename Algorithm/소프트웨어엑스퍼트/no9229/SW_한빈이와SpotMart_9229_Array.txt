@@ -1,0 +1,66 @@
+package sw;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.StringTokenizer;
+
+// 2개 선택이므로 2개의 배열로 계산 가능
+// N개 선택일 경우 불가...
+public class SW_한빈이와SpotMart_9229_Array {
+
+	static int T, N, M, ans;
+	public static void main(String[] args) throws Exception {
+		
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		T = Integer.parseInt(br.readLine());
+		
+		for (int t = 1; t <= T; t++) {
+			
+			StringTokenizer st = new StringTokenizer(br.readLine());
+			N = Integer.parseInt(st.nextToken()); // 과자 봉수 개수
+			M = Integer.parseInt(st.nextToken()); // 무게 제한
+			
+			int[] p1 = new int[N];
+			int[] p2 = new int[N];
+
+			ans = -1;
+
+			st = new StringTokenizer(br.readLine());
+			for (int i = 0; i < N; i++) {
+				
+				p1[i] = Integer.parseInt(st.nextToken());
+				p2[i] = p1[i];
+			}
+			
+			for (int i = 0; i < N; i++) {
+				for (int j = 0; j < N; j++) {
+					if( i == j ) continue;
+					if( p1[i] + p2[j] <= M && p1[i] + p2[j] > ans) ans = p1[i] + p2[j];
+				}
+			}
+			
+			System.out.println("#" + t + " " + ans);
+		}
+	}
+
+}
+
+/*
+https://swexpertacademy.com/main/code/problem/problemDetail.do?contestProbId=AW8Wj7cqbY0DFAXN
+*/
+
+/*
+4
+3 45
+20 20 20
+6 10
+1 2 5 8 9 11
+4 100
+80 80 60 60
+4 20
+10 5 10 16
+
+#1 40
+#2 10
+#3 -1
+#4 20
+*/

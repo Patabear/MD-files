@@ -1,0 +1,89 @@
+package bj;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+
+// 밖 --> 안
+// while() 안에서 높이와 너비를 줄여가면서
+public class BJ_배열돌리기1_16926 {
+
+	static int N, M, R;
+	static int[][] map;
+	
+	public static void main(String[] args) throws Exception{
+		//System.setIn(new FileInputStream("input.txt"));
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		String[] read = br.readLine().split(" ");
+		
+		N = Integer.parseInt(read[0]);
+		M = Integer.parseInt(read[1]);
+		R = Integer.parseInt(read[2]);
+		
+		map = new int[N][M];
+		for (int i = 0; i < N; i++) {
+			String[] line = br.readLine().split(" ");
+			for (int j = 0; j < M; j++) {
+				map[i][j] = Integer.parseInt(line[j]);
+			}
+		}
+
+		// R 번만큼 돌림
+		for (int i = 0; i < R; i++) {
+			rotate();
+		}
+		
+		// 출력
+		for (int i = 0; i < N; i++) {
+			for (int j = 0; j < M-1; j++) {
+				System.out.print(map[i][j] + " ");
+			}
+			System.out.println(map[i][M-1]);
+		}
+	}
+	
+	// while 문안에서 밖->안으로 좁혀가면서 이동
+	static void rotate() {
+		
+		// 시작은  map 의 가장 자리부터
+		int sy = 0, ey = N-1;
+		int sx = 0, ex = M-1;
+		
+		while(true) {
+			
+			// 기저 조건
+			if( ey - sy < 1 || ex - sx < 1 ) return;
+			
+			// 이동 시작으로 덮어 쓰여질 부분 복사 백업 (왼쪽 위 )
+			int temp = map[sy][sx];
+			
+			// Top 행  좌 이동
+			for (int i = sx; i < ex; i++) {
+				map[sy][i] = map[sy][i+1];
+			}
+			
+			// Right 열 상 이동
+			for (int i = sy; i < ey; i++) {
+				map[i][ex] = map[i+1][ex];
+			}
+			
+			// Bottom 행 우 이동
+			for (int i = ex; i > sx; i--) {
+				map[ey][i] = map[ey][i-1];
+			}
+			
+			// Left 열 하 이동
+			for (int i = ey; i > sy; i--) {
+				map[i][sx] = map[i-1][sx];
+			}
+			
+			// temp 로부터 이동 마지막 부분 복사( 왼쪽 위의 한칸 밑 )
+			map[sy+1][sx] = temp;
+			
+			// 안쪽으로 한 단계 좁힌다.
+			sy += 1; // 시작 y는 하나 아래로
+			sx += 1; // 시작 x는 하나 오른쪽으로
+			ey -= 1; // 종료 y는 하나 위
+			ex -= 1; // 종료 x는 하나 왼쪽으로
+		}
+	}
+}

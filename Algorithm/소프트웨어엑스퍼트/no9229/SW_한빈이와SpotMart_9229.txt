@@ -1,0 +1,78 @@
+package sw;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.StringTokenizer;
+
+// 조합
+// src 는 가변 tgt 는 2개
+public class SW_한빈이와SpotMart_9229 {
+
+	static int T, N, M, ans;
+	static int[] src, tgt;
+	
+	public static void main(String[] args) throws Exception {
+		
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		T = Integer.parseInt(br.readLine());
+		
+		for (int t = 1; t <= T; t++) {
+			
+			ans = -1;
+			
+			StringTokenizer st = new StringTokenizer(br.readLine());
+			N = Integer.parseInt(st.nextToken()); // 과자 봉수 개수
+			M = Integer.parseInt(st.nextToken()); // 무게 제한
+			
+			src = new int[N];
+			tgt = new int[2];			
+
+			
+			st = new StringTokenizer(br.readLine());
+			for (int i = 0; i < N; i++) {				
+				src[i] = Integer.parseInt(st.nextToken());
+			}
+			
+			comb(0, 0);
+
+			System.out.println("#" + t + " " + ans);
+		}
+
+	}
+
+	public static void comb(int srcIdx, int tgtIdx) {
+		
+		// 기저조건
+		if( tgtIdx == 2 ) {
+			int sum = tgt[0] + tgt[1];
+			if( sum > M ) return;
+			ans = Math.max(ans,  sum);
+			return;
+		}
+
+		if( srcIdx == N ) return;
+		
+		tgt[tgtIdx] = src[srcIdx];
+		
+		// 호출 순서 변경 X
+		comb( srcIdx+1, tgtIdx+1); // 현재 선택이 이어지게 +1 먼저
+		comb( srcIdx+1, tgtIdx);
+		
+	}
+}
+
+/*
+4
+3 45
+20 20 20
+6 10
+1 2 5 8 9 11
+4 100
+80 80 60 60
+4 20
+10 5 10 16
+
+#1 40
+#2 10
+#3 -1
+#4 20
+*/

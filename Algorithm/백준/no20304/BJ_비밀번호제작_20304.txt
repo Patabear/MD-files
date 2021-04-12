@@ -1,0 +1,70 @@
+package bj;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.StringTokenizer;
+
+// 모든 pasword 후보 N 에 대해, 모든 leak passwrord M 에 대해  bit 연산을 수행하면 연산수가 초과
+// N 안에 M 을 포함해서 생각
+//  leak password 로부터 bit 1 거리의 숫자를 찾아서 별도의 배열에 표시
+//  해당 배열은 visit select 역할을 수행
+public class BJ_비밀번호제작_20304 {
+
+	static int N, M, result = 0;
+	static int[] distance; // index ( 패스워드 후보 숫자 ) 별 안전거리
+	static Queue<Pwd> queue = new LinkedList<>();
+
+	public static void main(String[] args) throws IOException {
+
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
+		N = Integer.parseInt(br.readLine()); // 패스워드 최댓값
+		M = Integer.parseInt(br.readLine()); // 해커가 사용한 패스워드 갯수
+
+		distance = new int[N + 1];
+		for (int i = 0; i <= N; i++) {
+			distance[i] = -1; // 미방문. 방문되는 순간 거리정보로 갱신함.
+		}
+
+		StringTokenizer st = new StringTokenizer(br.readLine());
+		for (int i = 0; i < M; i++) {
+			int leak = Integer.parseInt(st.nextToken()); // 공격한 비밀번호
+			queue.add(new Pwd(leak, 0)); // 큐에 모아놓고
+			distance[leak] = 0; // 얘네들은 안전거리(보안척도) 0 얘네들로부터 1비트씩 멀어지는걸 기록하기
+		}
+		
+		// bfs탐색해서 해커가 공격한 비밀번호로부터 1비트씩 멀어지면서 거리 기록할 예정.
+		while (!queue.isEmpty()) {
+			Pwd n = queue.poll();
+			for (int temp = 1; temp <= N; temp <<= 1) {// 1-2-4-8-16-31...<N 을 옆으로 한칸씩 쉬프트하면서 기존 숫자와 매칭해서
+				
+				// 기존 숫자 n.num이랑 1비트가 다른 숫자 만들기.
+				// 음수가 안되도록 더하거나, 빼거나
+				int next = (n.num & temp) > 0 ? (n.num - temp) : (n.num + temp); 
+				// 유효하고 안전거리 카운트 한적 없으면
+				if(next<=N && distance[next]==-1) { 
+					distance[next] = n.count + 1; // 현재 n.num이랑 1비트 차이나는 숫자니까 거리+1 해서 큐에 넣기.
+					queue.add(new Pwd(next, n.count + 1)); // 큐에 넣어서 그 다음 숫자들 찾으러 다니기
+				}
+			}
+		}
+		
+		for(int i=0; i<=N; i++) {
+			result = Math.max(result, distance[i]); // 방금 발견한 숫자의 안전거리가 max 인지 갱신확인.
+		}
+		
+		System.out.println(result);
+	}
+
+	static class Pwd {
+		int num, count;
+
+		Pwd(int num, int count) {
+			this.num = num;
+			this.count = count;
+		}
+	}
+}

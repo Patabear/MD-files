@@ -1,0 +1,56 @@
+package bj;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.StringTokenizer;
+
+// Array
+public class BJ_요세푸스문제_1158 {
+
+	static int N, K;
+	static int[] input;
+	static StringBuilder output = new StringBuilder();
+	
+	public static void main(String[] args) throws Exception{
+		
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		
+		StringTokenizer st = new StringTokenizer(br.readLine());
+		
+		N = Integer.parseInt(st.nextToken());
+		K = Integer.parseInt(st.nextToken());
+		
+		input = new int[N+1];
+
+		for (int i = 1; i <= N; i++) {
+			input[i] = i;
+		}
+
+		// 1 2 3 4 5 6 7
+		int count = 0;
+		int idx = 1;
+		int step = 1;
+		output.append("<");
+		while(true) {
+			if(count == N) break;
+			
+			if( input[idx] != 0 ) {
+				if( (step % K) == 0 ){
+					output.append(input[idx]+", ");
+					input[idx] = 0;
+					count++;
+				}
+				step++;
+			}
+			
+			idx++;
+			if( idx > N ) idx = 1;
+		}
+		
+		output.deleteCharAt(output.length()-2);
+		output.deleteCharAt(output.length()-1);
+		output.append('>');
+		System.out.println(output);
+	}
+
+}

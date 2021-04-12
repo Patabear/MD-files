@@ -1,0 +1,44 @@
+package jo;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.Arrays;
+import java.util.StringTokenizer;
+
+// Greedy
+// 회의실 문제와 유사
+// 모든  약품 중 어떤 약품의 최고와 다른 약품의 최저가 Gap 이 존재한다면 같이 둘 수 없다.
+// 최고 온도로 모두 정렬 한 후, 이전 최고 온도보다 다음 최저 온도가 더 높으면 냉장고가 새로 필요함.
+// 최초 약품에 대해 1개의 냉장고가 필요하고 최초 약품의 최고 온도를 시작 최고온도로 사용
+
+public class JO_냉장고_1828 {
+	
+	static int N, max, count;
+	static int[][] input; // input[i][0] : 최저, input[i][1] : 최고
+	
+	public static void main(String[] args) throws Exception{
+		BufferedReader br=new BufferedReader(new InputStreamReader(System.in));
+		N = Integer.parseInt(br.readLine());
+		input = new int[N][2];
+		
+		for (int i = 0; i < N; i++) {
+			StringTokenizer st = new StringTokenizer(br.readLine());
+			input[i][0] = Integer.parseInt(st.nextToken());
+			input[i][1] = Integer.parseInt(st.nextToken());
+		}
+		
+		// 최고 온도로 정렬
+		Arrays.sort(input, (o1, o2)-> o1[1]-o2[1]);
+		
+		max = Integer.MIN_VALUE;
+		count = 0;
+		for (int i = 0; i < N; i++) {
+			if( input[i][0] > max ) {
+				count++;
+				max = input[i][1];
+			}
+		}
+		
+		System.out.println(count);
+	}
+}
